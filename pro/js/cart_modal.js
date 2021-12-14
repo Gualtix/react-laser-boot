@@ -1,3 +1,232 @@
+const tbody = document.getElementsByTagName("tbody")[0];
+
+const preloadedState = {
+    producto: {},
+    productos: 
+    [
+        {
+            codigo:"1",
+            descripcion:"Norco MTB Carbon Fiber",
+            unidades:3,
+            precio_unitario:3754,
+            subtotal:0
+        },
+        {
+            codigo:"2",
+            descripcion:"Helment MTB Oak Tree",
+            unidades:9,
+            precio_unitario:275,
+            subtotal:0
+        },
+        {
+            codigo:"3",
+            descripcion:"Helment MTB Oak Tree",
+            unidades:9,
+            precio_unitario:275,
+            subtotal:0
+        }
+    ]
+};
+
+let indice = 0;
+const reducer = (state, action) => {
+    if (action.type == "producto-agregado")
+    {
+        indice++;
+        const producto = action.payload;
+        const codigo = indice;
+        const total = producto.cantidad * producto.precio;
+        return {
+            ...state, 
+            productos: [
+                ...state.productos, 
+                { 
+                    ...producto,
+                    codigo,
+                    total
+                }
+            ]
+        };
+    }
+
+    if (action.type == "producto-modificado")
+    {
+        const producto = action.payload;
+        const productos = state.productos.slice();
+        const codigo = producto.codigo;
+        const total = producto.cantidad * producto.precio;
+        const old = productos.find((item) => item.codigo == codigo);
+        const index = productos.indexOf(old);
+        productos[index] = {...producto, total };
+        return {
+            ...state,
+            productos
+        };
+    }
+
+    if (action.type == "producto-eliminado")
+    {
+        const codigo = action.payload.codigo;
+        const productos = state.productos.filter((item) => item.codigo != codigo);
+        return {
+            ...state,
+            productos
+        }
+    }
+
+    if (action.type == "producto-seleccionado")
+    {
+        const codigo = action.payload.codigo;
+        return {
+            ...state,
+            producto: state.productos.find(x => x.codigo == codigo) || {}
+        }
+    }
+
+    return state;
+};
+
+const store = Redux.createStore(reducer, preloadedState);
+
+let latestState;
+
+store.subscribe(() => {
+    let currentState = store.getState();
+    if (currentState != latestState)
+    {
+        latestState = currentState;
+        console.log("estado: ", currentState);
+        renderTable(currentState.productos);
+    }
+});
+
+/*
+let order = {
+    nombre: "Walter Morales",
+    email: "walkter@gmail.com",
+    telefono:51510864,
+    direccion:"Antigua Guatemala, 4ta Calle 3-37",
+    detalle:[
+        {
+            codigo:"1",
+            descripcion:"Norco MTB Carbon Fiber",
+            unidades:3,
+            precio_unitario:3754,
+            subtotal:0
+        },
+        {
+            codigo:"2",
+            descripcion:"Helment MTB Oak Tree",
+            unidades:9,
+            precio_unitario:275,
+            subtotal:0
+        },
+        {
+            codigo:"3",
+            descripcion:"Helment MTB Oak Tree",
+            unidades:9,
+            precio_unitario:275,
+            subtotal:0
+        }
+    ],
+    total_unidades:0,
+    total:0
+}
+*/
+
+function renderTable(productos)
+{
+
+    const filas = productos.map((item) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${item.codigo}</td>
+            <td>${item.descripcion}</td>
+            <td>${item.unidades}</td>
+            <td>${item.precio_unitario}</td>
+            <td>${item.subtotal}</td>
+            <td>
+                <div class="btn-group">
+                    <a title="Editar" href="#" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <a title="Eliminar" href="#" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            </td>
+        `;
+
+        const [editar, eliminar] = tr.getElementsByTagName("a");
+
+        eliminar.addEventListener("click", (event) => {
+            event.preventDefault();
+            store.dispatch({
+                type: "producto-eliminado",
+                payload: {
+                    codigo: item.codigo
+                }
+            });
+        });
+
+        editar.addEventListener("click", (event) => {
+            event.preventDefault();
+            store.dispatch({
+                type: "producto-seleccionado",
+                payload: {
+                    codigo: item.codigo
+                }
+            });
+        });
+
+        return tr;
+    });
+
+    tbody.innerHTML = "";
+    filas.forEach((tr) => {
+        tbody.appendChild(tr);
+    });
+
+    cantidadTotalElement.innerText = sum(productos, x => x.cantidad);
+    precioTotalElement.innerText = sum(productos, x => x.precio);
+    granTotalElement.innerText = sum(productos, x => x.total);
+
+    function sum(elementos, selector) {
+        return elementos
+            .map(selector)
+            .reduce((a, b) => a + b, 0);
+    }
+
+}
+
+/*
+function render_table(productos){
+
+    const filas = productos.map((item) => 
+    {
+        const tr = document.createElement('tr');
+        tr.innerHTML = 
+        `
+        
+        `;
+    });
+    const tr = document.createElement("tr");
+}*/
+
+function increment(){
+    var id = "";
+    var txt = document.getElementById("txt_"+id); 
+    txt.value = (parseInt(txt.value) + 1);
+}
+
+function decrement(){
+    var id = "";
+    var txt = document.getElementById("txt_"+id); 
+    txt.value = (parseInt(txt.value) - 1);
+}
+
+
+
 async function click_shopping_cart(){
     var modal = document.getElementById('cart_modal');
 
@@ -5,8 +234,6 @@ async function click_shopping_cart(){
     modal.innerHTML += txt;
     open_cartModal();
 }
-
-
 
 function open_cartModal() {
     document.getElementById("backdrop").style.display = "block";
