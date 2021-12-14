@@ -18,8 +18,8 @@ const preloadedState = {
         },
         {
             codigo:"3",
-            descripcion:"Helment MTB Oak Tree",
-            unidades:9,
+            descripcion:"Dunlop 29 Inches Tires",
+            unidades:3,
             precio_unitario:275,
         }
     ]
@@ -141,12 +141,20 @@ function renderTable(productos)
         tr.innerHTML = `
             <td>${item.codigo}</td>
             <td>${item.descripcion}</td>
-            <td>${item.unidades}</td>
+            <td>
+
+                <div class="input-group" style="width: 150px; margin-right: 15px; ">
+                    <button type="button" class="btn btn-secondary" type="button"><i class="fas fa-minus"></i></button>
+                    <input type="text"  class="form-control">
+                    <button type="button" class="btn btn-secondary" type="button"><i class="fas fa-plus"></i></button>
+                </div>
+
+            </td>
             <td>${item.unidades * item.precio_unitario}</td>
             <td>
                 <div class="btn-group">
                     <a title="Eliminar" href="#" class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
+                        <i class="fas fa-trash-alt"></i>
                     </a>
                 </div>
             </td>
@@ -191,20 +199,6 @@ function renderTable(productos)
     }
 }
 
-/*
-function render_table(productos){
-
-    const filas = productos.map((item) => 
-    {
-        const tr = document.createElement('tr');
-        tr.innerHTML = 
-        `
-        
-        `;
-    });
-    const tr = document.createElement("tr");
-}*/
-
 function increment(){
     var id = "";
     var txt = document.getElementById("txt_"+id); 
@@ -216,8 +210,6 @@ function decrement(){
     var txt = document.getElementById("txt_"+id); 
     txt.value = (parseInt(txt.value) - 1);
 }
-
-
 
 async function click_shopping_cart(){
     var modal = document.getElementById('cart_modal');

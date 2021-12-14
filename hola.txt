@@ -1,0 +1,13 @@
+/*
+[
+  '{{repeat(25)}}',
+  {
+    code: '{{index()}}',
+    name: '{{lorem(2, "words")}}',
+    description: '{{lorem(1, "paragraphs")}}',
+    stock:'{{integer(0,150)}}',
+    price:'{{floating(1000, 4000, 2)}}',
+    img:'https://picsum.photos/'
+  }
+]
+*/
