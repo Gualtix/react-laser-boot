@@ -1,4 +1,4 @@
-const tbody = document.getElementsByTagName("tbody")[0];
+//const tbody = document.getElementsByTagName("tbody")[0];
 
 const preloadedState = {
     producto: {},
@@ -9,21 +9,18 @@ const preloadedState = {
             descripcion:"Norco MTB Carbon Fiber",
             unidades:3,
             precio_unitario:3754,
-            subtotal:0
         },
         {
             codigo:"2",
             descripcion:"Helment MTB Oak Tree",
             unidades:9,
             precio_unitario:275,
-            subtotal:0
         },
         {
             codigo:"3",
             descripcion:"Helment MTB Oak Tree",
             unidades:9,
             precio_unitario:275,
-            subtotal:0
         }
     ]
 };
@@ -137,19 +134,17 @@ let order = {
 function renderTable(productos)
 {
 
+
     const filas = productos.map((item) => {
+        
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>${item.codigo}</td>
             <td>${item.descripcion}</td>
             <td>${item.unidades}</td>
-            <td>${item.precio_unitario}</td>
-            <td>${item.subtotal}</td>
+            <td>${item.unidades * item.precio_unitario}</td>
             <td>
                 <div class="btn-group">
-                    <a title="Editar" href="#" class="btn btn-sm btn-outline-secondary">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
                     <a title="Eliminar" href="#" class="btn btn-sm btn-outline-danger">
                         <i class="bi bi-trash"></i>
                     </a>
@@ -157,7 +152,7 @@ function renderTable(productos)
             </td>
         `;
 
-        const [editar, eliminar] = tr.getElementsByTagName("a");
+        const [eliminar] = tr.getElementsByTagName("a");
 
         eliminar.addEventListener("click", (event) => {
             event.preventDefault();
@@ -168,35 +163,32 @@ function renderTable(productos)
                 }
             });
         });
-
-        editar.addEventListener("click", (event) => {
-            event.preventDefault();
-            store.dispatch({
-                type: "producto-seleccionado",
-                payload: {
-                    codigo: item.codigo
-                }
-            });
-        });
+    
 
         return tr;
     });
+
+    var tbody = document.getElementsByTagName("tbody")[0];
 
     tbody.innerHTML = "";
     filas.forEach((tr) => {
         tbody.appendChild(tr);
     });
+    
+    const total_unidades = document.getElementById("total_unidades");
+    const total = document.getElementById("total");
 
-    cantidadTotalElement.innerText = sum(productos, x => x.cantidad);
-    precioTotalElement.innerText = sum(productos, x => x.precio);
-    granTotalElement.innerText = sum(productos, x => x.total);
+    console.log(sum(productos, x => x.unidades));
+    console.log(sum(productos, x => x.total));
+
+    total_unidades.innerText = sum(productos, x => x.unidades);
+    total.innerText = sum(productos, x => (x.unidades * x.precio_unitario));
 
     function sum(elementos, selector) {
         return elementos
             .map(selector)
             .reduce((a, b) => a + b, 0);
     }
-
 }
 
 /*
@@ -239,6 +231,7 @@ function open_cartModal() {
     document.getElementById("backdrop").style.display = "block";
     document.getElementById("aceptcartmodal").style.display = "block";
     document.getElementById("aceptcartmodal").classList.add("show");
+    renderTable(store.getState().productos);
 }
 function close_cartModal() {
     document.getElementById("backdrop").style.display = "none";
