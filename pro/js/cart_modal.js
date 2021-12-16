@@ -48,13 +48,22 @@ const reducer = (state, action) => {
 
     if (action.type == "producto-modificado")
     {
+        /*
+        console.log(action.payload);
         const producto = action.payload;
         const productos = state.productos.slice();
         const codigo = producto.codigo;
         const total = producto.cantidad * producto.precio;
+        */
+        const producto = action.payload;
+        const codigo = producto.codigo;
+        const productos = state.productos.slice();
         const old = productos.find((item) => item.codigo == codigo);
         const index = productos.indexOf(old);
-        productos[index] = {...producto, total };
+        productos[index].unidades = action.payload.unidades;
+        //productos[index] = {...producto, total };
+        
+
         return {
             ...state,
             productos
@@ -145,7 +154,7 @@ function renderTable(productos)
 
                 <div class="input-group" style="width: 150px; margin-right: 15px; ">
                     <button type="button" class="btn btn-secondary" type="button"><i class="fas fa-minus"></i></button>
-                    <input type="text"  class="form-control">
+                    <input type="number"  class="form-control" value=${item.unidades}>
                     <button type="button" class="btn btn-secondary" type="button"><i class="fas fa-plus"></i></button>
                 </div>
 
@@ -168,6 +177,34 @@ function renderTable(productos)
                 type: "producto-eliminado",
                 payload: {
                     codigo: item.codigo
+                }
+            });
+        });
+
+        const [minus,plus] = tr.getElementsByTagName("button");
+
+        minus.addEventListener("click", (event) => {
+            event.preventDefault();
+            console.log("minus");
+            
+            store.dispatch({
+                type: "producto-modificado",
+                payload: {
+                    codigo: item.codigo,
+                    unidades: item.unidades - 1
+                }
+            });
+        });
+
+        plus.addEventListener("click", (event) => {
+            event.preventDefault();
+            console.log("plus");
+            
+            store.dispatch({
+                type: "producto-modificado",
+                payload: {
+                    codigo: item.codigo,
+                    unidades: item.unidades + 1
                 }
             });
         });

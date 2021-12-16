@@ -37,7 +37,7 @@ async function add_cards(){
     
         catalog.appendChild(card_template)
         i++;
-        } 
+    } 
 
     var paginator = document.getElementById("catalog");
     var txt = await (await fetch("/pro/html/paginator.html")).text();
