@@ -1,27 +1,18 @@
 import React from "react";
-//import Card from "../card/Card.component";
+import './Catalog.css';
+
+import Cardix from "../card/Card.component";
 import stock  from "../../stock.json";
 
 const Catalog = () => {
 
 
     return(
-        <div>
+        <div id="catalog">
             {
                 stock.map((product) => 
                 {
-                  return(   
-                        <div>
-                            <div>
-                                <img src={product.img} alt={product.name}/>
-                            </div>
-                            <div>
-                                <p>{product.name}</p>
-                                <p>{product.price}</p>
-                 
-                            </div>
-                        </div>
-                    )   
+                    return <Cardix key={product.id} product={product}/>   
                 })
             }
             

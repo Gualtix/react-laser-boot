@@ -3,3 +3,10 @@
     color: white;
     font-size: 25px;
 }
+
+.stripe{
+    width: 100%;
+    min-height: 55px;
+    background-color: rgb(225, 65, 92);
+    overflow: hidden;
+}
