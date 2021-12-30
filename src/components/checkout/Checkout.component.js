@@ -3,8 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'bootstrap';
 import './Checkout.css';
-//import $ from 'jquery';
-
 
 
 
