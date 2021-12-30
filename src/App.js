@@ -1,5 +1,6 @@
 import React from "react";
 import Menu from "./components/menu/Menu.component";
+import Catalog from "./components/catalog/Catalog.component";
 import Footer from "./components/footer/Footer.component";
 import './App.css';
 
@@ -11,12 +12,8 @@ const App = () => {
       <Menu/>
       <section css="background-color: cornflowerblue; height: 100%;">
 
-        <div id="shopping_cart">
-        </div>
-
-        <div id="catalog">
-        </div>
-
+        <Catalog/>
+        
       </section>
 
       <Footer/>
