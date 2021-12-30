@@ -24,6 +24,14 @@ async function add_cards(){
         var img = tmp_html.getElementById("images");
         img.src = stock[i].img;
 
+        var product = stock[i];
+        card_template.dataset.productId = stock[i].code;
+        card_template.addEventListener('click', (e) => {
+            console.log(product);
+        });
+
+
+
         /*
         const response = await fetch(`https://picsum.photos/500`);
         const blob = await response.blob();
@@ -34,13 +42,12 @@ async function add_cards(){
         img.src = url;
         */
 
-    
         catalog.appendChild(card_template)
         i++;
     } 
 
-    var paginator = document.getElementById("catalog");
-    var txt = await (await fetch("/pro/html/paginator.html")).text();
-    paginator.innerHTML += txt;
+    //var paginator = document.getElementById("catalog");
+    //var txt = await (await fetch("/pro/html/paginator.html")).text();
+    //paginator.innerHTML += txt;
 }
 
