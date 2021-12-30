@@ -2,7 +2,17 @@
 
 /*primero en el móvil (mobile first)*/
 
+header{
+  height: 50px;
+  display: flex;
+  align-items: center;
 
+  width: 100%;
+  min-height: 55px;
+  background-color: springgreen;
+  overflow: hidden;
+  padding-right: 10px;
+}
 
 nav {
   height: 100%;
