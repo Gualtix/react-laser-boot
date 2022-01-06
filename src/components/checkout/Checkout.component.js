@@ -1,54 +1,122 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
 import './Checkout.css';
 
+import { useDispatch, useSelector } from "react-redux";
+import { productoEliminado, productoSeleccionado,productoModificado } from "../../store/store";
+
+/*
+
+const onSubmit = (event) => {
+      event.preventDefault();
+      const payload = {
+          ...values,
+          cantidad: parseInt(values.cantidad),
+          precio: parseFloat(values.precio)
+      }
+      dispatch(agregarOModificarProducto(payload));
+  }
+
+*/
+
+const ChangeCantidad = (op,prod) => {
+  if(op == '+'){
+    prod.cantidad++;
+  }
+  else{
+    prod.cantidad--;
+  } 
+  console.log(prod);
+}
+
+const ProductItem = (prop) => {
+  const producto = prop.producto;
+  const acciones = prop.acciones;
+  return (
+      <tr>
+        <th scope="row">{producto.codigo}</th>
+        <td>
+          <div style={{ width: "250px" }}>
+          {producto.nombre}
+          </div>
+        </td>
+        <td>
+
+          <div className="input-group" style={{ width: "150px", marginRight: "15px" }}>
+            <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-minus" onClick={() => ChangeCantidad('-',producto)}></i></button>
+            <input type="text" className="form-control" defaultValue={producto.cantidad}/>
+            <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-plus" onClick={() => ChangeCantidad('+',producto)}></i></button>
+          </div>
+
+        </td>
+        <td>{producto.precio}</td>
+        <td>
+          <button type="button" className="btn btn-danger" type="button"><i className="fas fa-trash-alt" onClick={() => acciones.eliminar(producto.codigo)}></i></button>
+        </td>
+      </tr>
+  );
+}
+
 const Checkout = ({ show, handleShow, handleClose }) => {
+
+    const productos = useSelector((state) => state.productos);
+    const dispatch = useDispatch();
+
+    const seleccionar = (codigo) => dispatch(productoSeleccionado(codigo));
+    const eliminar = (codigo) => dispatch(productoEliminado(codigo));
+    const modificar = (codigo) => dispatch(productoModificado(codigo));
+
+    const acciones = {
+        seleccionar,
+        eliminar,
+        modificar
+    }
+
+    const cantidadTotal = sum(productos, x => x.cantidad);
+    const precioTotal = sum(productos, x => x.precio);
+    const granTotal = sum(productos, x => x.total);
 
   return (
     <div>
       <button type="button" className="btn btn-primary" onClick={handleShow} style={{ marginRight: "5px" }}><i className="fas fa-shopping-cart"></i></button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal size="lg" show={show} onHide={handleClose} >
         <Modal.Header closeButton>
           <Modal.Title>Confirmar Compra</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-
-
+        <Modal.Body style={{ overflow: "hidden" }}>
 
           <form>
 
             <div className="form-group">
-              <label for="exampleInputEmail1">Nombre</label>
-              <input type="email" className="form-control" id="exampleInputEmail1"/>
+              <label htmlFor="exampleInputEmail1">Nombre</label>
+              <input type="email" className="form-control" id="exampleInputEmail1" />
             </div>
 
             <div className="row">
               <div className="col">
-                <label for="exampleInputEmail1">Email</label>
-                <input type="email" className="form-control" id="exampleInputEmail1"/>
+                <label htmlFor="exampleInputEmail1">Email</label>
+                <input type="email" className="form-control" id="exampleInputEmail1" />
               </div>
               <div className="col">
-                <label for="exampleInputPassword1">Telefono</label>
-                <input type="password" className="form-control" id="exampleInputPassword1"/>
+                <label htmlFor="exampleInputPassword1">Telefono</label>
+                <input type="password" className="form-control" id="exampleInputPassword1" />
               </div>
             </div>
 
 
             <div className="form-group">
-              <label for="exampleInputPassword1">Direccion</label>
-              <input type="password" className="form-control" id="exampleInputPassword1"/>
+              <label htmlFor="exampleInputPassword1">Direccion</label>
+              <input type="password" className="form-control" id="exampleInputPassword1" />
             </div>
           </form>
 
-          <div style="display: flex; justify-content: space-between; align-items: center; background-color: rgb(255, 255, 255); margin-left: 15px; margin-top: 10px;">
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "rgb(255, 255, 255)", marginLeft: "15px", marginTop: "10px" }}>
 
-            <div style="font-size: 25px; font-weight: bold; background-color: rgb(255, 255, 255);">
-              Detalle
+            <div style={{ fontSize: "25px", fontWeight: "bold", backgroundColor: "rgb(255, 255, 255)" }}>
+              D E T A L L E
             </div>
-
 
           </div>
 
@@ -66,42 +134,16 @@ const Checkout = ({ show, handleShow, handleClose }) => {
               </thead>
               <tbody>
 
-              
-              <tr>
-                <th scope="row">1</th>
-                <td>Norco MT Bike</td>
-                <td>
+              {productos.map(item => <ProductItem key={item.codigo} producto={item} acciones={acciones} />)}
+                
 
-                  <div className="input-group" style="width: 150px; margin-right: 15px; ">
-                    <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-minus"></i></button>
-                    <input type="text"  className="form-control"/>
-                    <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-plus"></i></button>
-                  </div>
-
-                </td>
-                <td>Q 475.25</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Dunlop 29 Tires</td>
-                <td>3</td>
-                <td>Q 218.21</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Oakley MTB Helmet</td>
-                <td>7</td>
-                <td>Q 375.26</td>
-              </tr>
-            </tbody>
-
-
+              </tbody>
 
               <tfoot>
                 <tr>
-                  <td colspan="2">Totales:</td>
-                  <td id="total_unidades">0</td>
-                  <td id="total">0</td>
+                  <td colSpan="2">Totales:</td>
+                  <td id="total_unidades">{cantidadTotal}</td>
+                  <td id="total">{precioTotal}</td>
                   <td></td>
                 </tr>
               </tfoot>
@@ -109,13 +151,6 @@ const Checkout = ({ show, handleShow, handleClose }) => {
             </table>
 
           </div>
-
-
-
-
-
-
-
 
         </Modal.Body>
         <Modal.Footer>
@@ -129,4 +164,58 @@ const Checkout = ({ show, handleShow, handleClose }) => {
   )
 }
 
+function sum(elementos, selector) {
+  return elementos
+      .map(selector)
+      .reduce((a, b) => a + b, 0);
+}
+
 export default Checkout;
+
+/*
+
+
+<tr>
+                  <th scope="row">1</th>
+                  <td>
+                    <div style={{ width: "250px" }}>
+                      Norco MTB Bike
+                    </div>
+                  </td>
+                  <td>
+
+                    <div className="input-group" style={{ width: "150px", marginRight: "15px" }}>
+                      <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-minus"></i></button>
+                      <input type="text" className="form-control" />
+                      <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-plus"></i></button>
+                    </div>
+
+                  </td>
+                  <td>Q 13,475.25</td>
+                  <td>
+                    <button type="button" className="btn btn-danger" type="button"><i className="fas fa-trash-alt"></i></button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Mtb Helmet</td>
+                  <td>
+
+                    <div className="input-group" style={{ width: "150px", marginRight: "15px" }}>
+                      <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-minus"></i></button>
+                      <input type="text" className="form-control" />
+                      <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-plus"></i></button>
+                    </div>
+
+                  </td>
+                  <td>Q 475.25</td>
+                  <td>
+                    <button type="button" className="btn btn-danger" type="button"><i className="fas fa-trash-alt"></i></button>
+                  </td>
+                </tr>
+
+
+
+
+*/

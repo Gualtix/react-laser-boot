@@ -21,13 +21,3 @@ const Catalog = () => {
 }
 
 export default Catalog;
-/*
-
-{
-                stock.map(item => {
-                    return <Card key={item.id} item={item}/>
-                })
-
-            }
-
-            */

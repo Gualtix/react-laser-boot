@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from 'react';
 import './Card.css';
 import { Card } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 
+import Buyer from "../buyer/Buyer.component";
+
 
 const Cardix = (props) => {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
         <Card style={{ width: '19rem'}}>
             <Card.Img variant="top" src={props.product.img} />
@@ -15,7 +22,12 @@ const Cardix = (props) => {
                     <Card.Title style={{color:"dimgrey"}}>Q {props.product.price}</Card.Title>
                 </div>
                 
-                <Button variant="warning" style={{width:"100%",marginTop:"15px",fontWeight: "bold"}}>COMPRAR</Button>
+                <Buyer
+                    show={show}
+                    setShow={setShow}
+                    handleClose={handleClose}
+                    handleShow={handleShow}
+                />
             </Card.Body>
         </Card>
     )
