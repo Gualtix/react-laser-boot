@@ -6,6 +6,8 @@ import './Checkout.css';
 import { useDispatch, useSelector } from "react-redux";
 import { productoEliminado, productoSeleccionado,productoModificado } from "../../store/store";
 
+var tmp = 0;
+
 /*
 
 const onSubmit = (event) => {
@@ -20,14 +22,17 @@ const onSubmit = (event) => {
 
 */
 
-const ChangeCantidad = (op,prod) => {
+const ChangeCantidad = (op,prod,acciones) => {
   if(op == '+'){
     prod.cantidad++;
   }
   else{
-    prod.cantidad--;
+    if(prod.cantidad > 0){
+      prod.cantidad--;
+    }
+    
   } 
-  console.log(prod);
+  acciones.modificar(prod)
 }
 
 const ProductItem = (prop) => {
@@ -44,13 +49,13 @@ const ProductItem = (prop) => {
         <td>
 
           <div className="input-group" style={{ width: "150px", marginRight: "15px" }}>
-            <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-minus" onClick={() => ChangeCantidad('-',producto)}></i></button>
-            <input type="text" className="form-control" defaultValue={producto.cantidad}/>
-            <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-plus" onClick={() => ChangeCantidad('+',producto)}></i></button>
+            <button type="button" className="btn btn-secondary" type="button" onClick={() => ChangeCantidad('-',producto,acciones)}><i className="fas fa-minus" ></i></button>
+            <input type="text" className="form-control" value={producto.cantidad}/>
+            <button type="button" className="btn btn-secondary" type="button" onClick={() => ChangeCantidad('+',producto,acciones)}><i className="fas fa-plus" ></i></button>
           </div>
 
         </td>
-        <td>{producto.precio}</td>
+        <td>{producto.precio * producto.cantidad}</td>
         <td>
           <button type="button" className="btn btn-danger" type="button"><i className="fas fa-trash-alt" onClick={() => acciones.eliminar(producto.codigo)}></i></button>
         </td>
@@ -74,7 +79,7 @@ const Checkout = ({ show, handleShow, handleClose }) => {
     }
 
     const cantidadTotal = sum(productos, x => x.cantidad);
-    const precioTotal = sum(productos, x => x.precio);
+    //const precioTotal = sum(productos, x => x.precio);
     const granTotal = sum(productos, x => x.total);
 
   return (
@@ -143,7 +148,7 @@ const Checkout = ({ show, handleShow, handleClose }) => {
                 <tr>
                   <td colSpan="2">Totales:</td>
                   <td id="total_unidades">{cantidadTotal}</td>
-                  <td id="total">{precioTotal}</td>
+                  <td id="total">{granTotal}</td>
                   <td></td>
                 </tr>
               </tfoot>

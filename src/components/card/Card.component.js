@@ -27,6 +27,7 @@ const Cardix = (props) => {
                     setShow={setShow}
                     handleClose={handleClose}
                     handleShow={handleShow}
+                    product={props.product}
                 />
             </Card.Body>
         </Card>

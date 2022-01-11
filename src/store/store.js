@@ -65,9 +65,9 @@ export const agregarOModificarProducto = (payload) => ({
 // }
 
 export const loggerMiddleware = store => next => action => {
-    console.log("dispatching", action);
+    //console.log("dispatching", action);
     const result = next(action);
-    console.log("next state", store.getState());
+    //console.log("next state", store.getState());
     return result;
 }
 
@@ -122,6 +122,7 @@ function productoEliminadoReducer(state, action) {
 }
 
 function productoModificadoReducer(state, action) {
+    
     const producto = action.payload;
     const productos = state.productos.slice();
     const codigo = producto.codigo;
@@ -129,6 +130,7 @@ function productoModificadoReducer(state, action) {
     const old = productos.find((item) => item.codigo == codigo);
     const index = productos.indexOf(old);
     productos[index] = { ...producto, total };
+    console.log(producto);
     return {
         ...state,
         productos
