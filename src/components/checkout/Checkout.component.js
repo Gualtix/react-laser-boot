@@ -8,6 +8,11 @@ import { productoEliminado, productoSeleccionado,productoModificado } from "../.
 
 var tmp = 0;
 
+const NumFormat = (num) => {   // round to 2 decimal places    
+  num = parseFloat(num).toFixed(2)
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 /*
 
 const onSubmit = (event) => {
@@ -32,7 +37,7 @@ const ChangeCantidad = (op,prod,acciones) => {
     }
     
   } 
-  acciones.modificar(prod)
+  acciones.modificar(prod);
 }
 
 const ProductItem = (prop) => {
@@ -50,14 +55,14 @@ const ProductItem = (prop) => {
 
           <div className="input-group" style={{ width: "150px", marginRight: "15px" }}>
             <button type="button" className="btn btn-secondary" type="button" onClick={() => ChangeCantidad('-',producto,acciones)}><i className="fas fa-minus" ></i></button>
-            <input type="text" className="form-control" value={producto.cantidad}/>
+            <input type="text" className="form-control" value={producto.cantidad} readOnly/>
             <button type="button" className="btn btn-secondary" type="button" onClick={() => ChangeCantidad('+',producto,acciones)}><i className="fas fa-plus" ></i></button>
           </div>
 
         </td>
-        <td>{producto.precio * producto.cantidad}</td>
+        <td> Q {NumFormat(producto.precio * producto.cantidad)}</td>
         <td>
-          <button type="button" className="btn btn-danger" type="button"><i className="fas fa-trash-alt" onClick={() => acciones.eliminar(producto.codigo)}></i></button>
+          <button type="button" className="btn btn-danger" type="button" onClick={() => acciones.eliminar(producto.codigo)}><i className="fas fa-trash-alt" ></i></button>
         </td>
       </tr>
   );
@@ -68,12 +73,11 @@ const Checkout = ({ show, handleShow, handleClose }) => {
     const productos = useSelector((state) => state.productos);
     const dispatch = useDispatch();
 
-    const seleccionar = (codigo) => dispatch(productoSeleccionado(codigo));
+
     const eliminar = (codigo) => dispatch(productoEliminado(codigo));
-    const modificar = (codigo) => dispatch(productoModificado(codigo));
+    const modificar = (payload) => dispatch(productoModificado(payload));
 
     const acciones = {
-        seleccionar,
         eliminar,
         modificar
     }
@@ -140,7 +144,6 @@ const Checkout = ({ show, handleShow, handleClose }) => {
               <tbody>
 
               {productos.map(item => <ProductItem key={item.codigo} producto={item} acciones={acciones} />)}
-                
 
               </tbody>
 
@@ -148,7 +151,7 @@ const Checkout = ({ show, handleShow, handleClose }) => {
                 <tr>
                   <td colSpan="2">Totales:</td>
                   <td id="total_unidades">{cantidadTotal}</td>
-                  <td id="total">{granTotal}</td>
+                  <td id="total">Q {NumFormat(granTotal)}</td>
                   <td></td>
                 </tr>
               </tfoot>
@@ -177,50 +180,3 @@ function sum(elementos, selector) {
 
 export default Checkout;
 
-/*
-
-
-<tr>
-                  <th scope="row">1</th>
-                  <td>
-                    <div style={{ width: "250px" }}>
-                      Norco MTB Bike
-                    </div>
-                  </td>
-                  <td>
-
-                    <div className="input-group" style={{ width: "150px", marginRight: "15px" }}>
-                      <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-minus"></i></button>
-                      <input type="text" className="form-control" />
-                      <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-plus"></i></button>
-                    </div>
-
-                  </td>
-                  <td>Q 13,475.25</td>
-                  <td>
-                    <button type="button" className="btn btn-danger" type="button"><i className="fas fa-trash-alt"></i></button>
-                  </td>
-                </tr>
-
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Mtb Helmet</td>
-                  <td>
-
-                    <div className="input-group" style={{ width: "150px", marginRight: "15px" }}>
-                      <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-minus"></i></button>
-                      <input type="text" className="form-control" />
-                      <button type="button" className="btn btn-secondary" type="button"><i className="fas fa-plus"></i></button>
-                    </div>
-
-                  </td>
-                  <td>Q 475.25</td>
-                  <td>
-                    <button type="button" className="btn btn-danger" type="button"><i className="fas fa-trash-alt"></i></button>
-                  </td>
-                </tr>
-
-
-
-
-*/

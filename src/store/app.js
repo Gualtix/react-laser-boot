@@ -7,14 +7,14 @@ const preloadedState = deserialized || {
     producto: {},
     productos: [
         {
-            codigo: "1",
+            codigo: 525,
             nombre: "Producto Uno",
             precio: 100,
             cantidad: 1,
             total: 100
         },
         {
-            codigo: "2",
+            codigo: 625,
             nombre: "Producto Dos",
             precio: 100,
             cantidad: 1,
@@ -26,9 +26,10 @@ const preloadedState = deserialized || {
 const middlewares = applyMiddleware(
     storage.loggerMiddleware,
     storage.agregarOModificarProductoMiddleware,
-    storage.generadorCodigoProductoBuilder(100),
-    storage.storageMiddleware,
+    storage.storageMiddleware
 );
+
+    //storage.generadorCodigoProductoBuilder(100),
 
 const store = createStore(storage.reducer, preloadedState, middlewares);
 

@@ -2,7 +2,7 @@ import React from "react";
 import './Footer.css';
 
 const Footer = () => {
-    return <footer className="stripe" css="background-color: deeppink; margin-top: auto;">
+    return <footer className="footer_container stripe" css="background-color: deeppink; margin-top: auto;">
 
     <a href="#" className="sept"><span className="fa fa-whatsapp"><i className="sr-only">Whatsapp</i></span></a>
     <a href="#" className="sept"><span className="fa fa-youtube"><i className="sr-only">Youtube</i></span></a>

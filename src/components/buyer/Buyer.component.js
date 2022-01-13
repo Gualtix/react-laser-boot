@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
 import './Buyer.css';
+import Badge from 'react-bootstrap/Badge';
 
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { productoModificado,productoAgregado,productoSeleccionado} from "../../store/store";
 
 const Increment = (op,cnt) => {
+   
     if(op == '+'){
         cnt++;
     }
@@ -18,22 +20,84 @@ const Increment = (op,cnt) => {
     return cnt;
 }
 
+const AgregarProd = (prod,cnt,acciones,handleClose) => {
+    /*
+        codigo: "1",
+        nombre: "Producto Uno",
+        precio: 100,
+        cantidad: 1,
+        total: 100
+    */
+    //console.log(prod);
+
+    const payload = {
+
+        codigo: prod.code,
+        nombre: prod.name,
+        precio: prod.price,
+        cantidad: cnt,
+        total: (prod.price * cnt)
+    }
+    
+    if(cnt > 0){
+
+    }
+    acciones.agregar(payload);
+    handleClose();
+}
+
 const NumFormat = (num) => {   // round to 2 decimal places    
     num = parseFloat(num).toFixed(2)
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 
+const Buyer = ({ show, handleShow, handleClose,product}) => {
+
+    
+    
 
 
-const Buyer = ({ show, handleShow, handleClose,product }) => {
+    const productos = useSelector((state) => state.productos);
+    const dispatch = useDispatch();
 
-    const [cnt, setCNT] = useState(1);
+    const modificar   = (codigo) => dispatch(productoModificado(codigo));
+    const agregar     = (payload) => dispatch(productoAgregado(payload));
+    //    const agregar     = (payload => dispatch(productoAgregado(payload)));
+    const seleccionar = (codigo) => dispatch(productoSeleccionado(codigo));
+
+    
+
+    const acciones = {
+        modificar,
+        seleccionar,
+        agregar
+    }
+
+
+    //let xp = productos.find(x => x.codigo == product.code) || null
+    //let tmp = 0;
+    //console.log(xp);
+
+    
+
+
+    const [cnt, setCNT] = useState(0);
+
+
   
     return (
         <div>
 
-            <Button variant="warning" onClick={handleShow} style={{ width: "100%", marginTop: "15px", fontWeight: "bold" }}>COMPRAR</Button>
+            <Button variant="warning" onClick={handleShow} style={{ width: "100%", marginTop: "15px", fontWeight: "bold" }}>
+                COMPRAR
+
+                
+                {(cnt > 0) && (
+                <Badge pill bg="danger" style={{marginLeft:"15px"}}>{cnt}</Badge>
+                )}
+                
+            </Button>
 
             <Modal show={show} onHide={handleClose} >
                 <Modal.Header closeButton>
@@ -73,7 +137,7 @@ const Buyer = ({ show, handleShow, handleClose,product }) => {
                 <Modal.Footer>
 
                     <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
-                    <Button variant="primary" onClick={handleClose}>Agregar</Button>
+                    <Button variant="primary" onClick={() => {AgregarProd(product,cnt,acciones,handleClose)}}>Agregar</Button>
 
                 </Modal.Footer>
             </Modal>

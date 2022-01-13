@@ -10,7 +10,7 @@ const App = () => {
   return <div className="whole">
     <div className="main">
       <Menu/>
-      <section css="background-color: cornflowerblue; height: 100%;">
+      <section className="sect">
 
         <Catalog/>
         

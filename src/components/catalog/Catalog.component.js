@@ -12,7 +12,7 @@ const Catalog = () => {
             {
                 stock.map((product) => 
                 {
-                    return <Cardix key={product.id} product={product}/>   
+                    return <Cardix key={product.code} product={product}/>   
                 })
             }
             

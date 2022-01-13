@@ -139,6 +139,20 @@ function productoModificadoReducer(state, action) {
 
 function productoAgregadoReducer(state, action) {
     const producto = action.payload;
+    const productos = state.productos.slice();
+    const codigo = producto.codigo;
+    const old = productos.find((item) => item.codigo == codigo);
+
+    console.log(codigo);
+    console.log(old);
+    if (old){
+        console.log("entrando :v");
+        return productoModificadoReducer(state, action);
+    }
+    else{
+        console.log("no entro :v");
+    }
+
     const total = producto.cantidad * producto.precio;
     return {
         ...state,
